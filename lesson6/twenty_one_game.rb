@@ -3,12 +3,10 @@ require 'pry-byebug'
 
 SUITS = [:diamonds, :spades, :hearts, :clubs]
 
-deck = {
-        diamonds: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
-        hearts: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
-        clubs: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
-        spades: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King)
-      }
+deck = { diamonds: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
+         hearts: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
+         clubs: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
+         spades: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King) }
 
 J_K_Q = %w(Jack King Queen)
 
@@ -21,8 +19,8 @@ def initial_hand!(deck, hand)
     break if hand.size == 2
     suit = SUITS.sample
     card = deck[suit].sample
-		hand << [suit, card]
-		deck[suit].delete(card)
+    hand << [suit, card]
+    deck[suit].delete(card)
   end
   hand
 end
@@ -67,7 +65,7 @@ end
 
 def default_values!(hand, arr)
   hand.each do |subarr|
-    if J_K_Q.member?(subarr[1])
+    if J_K_Q.member?(subarr[1]) # =>
       arr << 10
     elsif subarr.member?('Ace')
       arr << 11
@@ -81,7 +79,7 @@ def last_card_value!(hand, arr)
   if J_K_Q.member?(hand.last[1])
     arr << 10
   elsif hand.last[1] == 'Ace'
-    (arr.inject(:+) + 11 ) > 21 ?  arr << 1 : arr << 11
+    (arr.inject(:+) + 11) > 21 ? arr << 1 : arr << 11
   else
     arr << hand.last[1].to_i
   end
@@ -121,7 +119,7 @@ def yes_no
 end
 
 def dealer_hit_or_stay(d_sum)
-  return d_sum > 17 ? 's' : 'h'
+  d_sum > 17 ? 's' : 'h'
 end
 
 def compare_cards(p_hand, d_hand)
@@ -152,12 +150,10 @@ def play_again
 end
 
 def reset_deck
-  deck = {
-      diamonds: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
-      hearts: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
-      clubs: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
-      spades: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King)
-    }
+  { diamonds: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
+    hearts: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
+    clubs: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King),
+    spades: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King) }
 end
 
 def resets_anything(i)
@@ -231,6 +227,7 @@ loop do
       resets_anything(p_card_values)
       resets_anything(deck)
       deck.merge!(reset_deck)
+      system("clear")
       next
     end
   end
@@ -289,5 +286,6 @@ loop do
     resets_anything(p_card_values)
     resets_anything(d_card_values)
     deck.merge!(reset_deck)
+    system("clear")
   end
 end
