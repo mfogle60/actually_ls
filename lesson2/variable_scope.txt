@@ -1,0 +1,69 @@
+================================================================================
+                        Variable Scope Notes
+================================================================================
+-We will talk about variable scope and how it pertains to accessing variables
+-remember in Ruby there are different types of variables
+  -each variable type has its own scoping rules
+-but here we will only talk about local variables
+-there are two ways variable scope is created:
+  1) through method definition
+  2) through method invocation with a block
+-Method invocation w/ block create their own scope for local variables
+  -nested blocks create nested scopes
+-A variable's scope depends on where it was initialized
+-Variables initialized in an outer scope can be accessed in an inner scope,
+  -but not vice versa.
+- We can change variables from an inner scope and have that change affect the outer scope
+
+--------------------------------------------------------------------------------
+        Example 2: inner scope variables cannot be accessed in outer scope
+loop do       # the block following the invocation of the `loop` method creates an inner scope
+  b = 1
+  break
+end
+
+puts b        # => NameError: undefined local variable or method `b' for main:Object
+--------------------------------------------------------------------------------
+                  Example 3: peer scopes do not conflict
+2.times do
+  a = 'hi'
+  puts a      # 'hi' <= this will be printed out twice due to the loop
+end
+
+loop do
+  puts a      # => NameError: undefined local variable or method `a' for main:Object
+  break
+end
+
+puts a        # => NameError: undefined local variable or method `a' for main:Object
+
+-Peer scopes from loop cannot take a variable that was instantiated inside one
+  -loop and use it another. Though you can instantiate a variable of the
+    -same name (given it was instantiated in loop a's inner scope)
+      -and use it in loop 'b', this will result in them having the same var name,
+        -while being in two different loops.
+--------------------------------------------------------------------------------
+                        Example 4: Nested Loops
+--------------------------------------------------------------------------------
+a = 1           # first level variable
+
+loop do         # second level
+  b = 2
+
+  loop do       # third level
+    c = 3
+    puts a      # => 1
+    puts b      # => 2
+    puts c      # => 3
+    break
+  end
+
+  puts a        # => 1
+  puts b        # => 2
+  puts c        # => NameError
+  break
+end
+
+puts a          # => 1
+puts b          # => NameError
+puts c          # => NameError

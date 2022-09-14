@@ -1,0 +1,122 @@
+================================================================================
+                          General Methods info
+================================================================================
+-The instinct to extract code to a method is good.
+-Methods should only do one thing and their responsibility should be very limited.
+-The methods we create should be around 10 lines long and no longer than 15
+-If I have a method that is 15 lines or more than I must separate it into
+  -two or three methods
+
+================================================================================
+                        How to write good methods
+================================================================================
+-Don't display something to the output and return a meaningful value
+  -I guess by 'displaying' something to the output it means you shouldn't
+  -use the return value of a method to be displayed as output.
+-Since Ruby always returns a value, the key here is that the return value
+  -should NOT be the intent of the method.
+-I must decide if I want the method to return a value with NO side effects
+  -OR if I want the method to perform side effects with NO return value
+  -If you choose for your method to do both, you probably won't remember what
+    -your method does when you need to call it
+  -If the method does have side effects, then the method name MUST reflect that
+    -usually with methods that do have side effects, they have a '!' in the
+      -method name. For ex in the standard ruby library, methods that have
+        -side effects have a ! in the name
+-I will not name any methods with the word 'return' for ex, 'return_total'
+  -because it is already implied that the method will return something
+    -I would NOT expect the 'return_total' method to have side effects nor print
+      -a value out. We expect it to just return a value.
+        -it is safe to say that that method would look like this:
+
+def total(cards) # [1,2,3]
+end
+# => integer
+
+-Notice in the method above, we expect the method to just return the total,
+  -an integer. If total ends up mutating the cards then we would get confused.
+    -that means that I will have to look up what it does and remember for
+      -future usage, this also means that other people who see my code will
+        -most likely get confused too.
+-The way to know if I named a method correctly, is if I can see my method, and
+  -just from its name, and get a good idea of what it does without looking
+    -at the implementation of the method in the entire program.
+
+================================================================================
+                Methods must be at the same level of abstraction!
+================================================================================
+-Usually methods take in input and return some output.
+
+-What 'the same level of abstraction' means is that I should be able to take a
+  -method out from my program,(know what it is returning/what side effects it has)
+    -and it make sense on its own, outside of my implementing it in the program.
+      -The key is to be able to give it inputs, and and expect to give it outputs
+        -all without having to worry about how it fits in my program.
+         -Working this way helps compartmentalize my focus, an important skill
+           -when working on large codebases.
+-Remember, the better the methods are compartmentalized in my program the easier
+  -it'll be to work in larger codebases
+-When reading good code, all methods have the same layer of abstraction
+-Look at the following methods
+  -deal(),hit(),stay(), iterate_through_cards()
+    -the last method iterate_through_cards() requires that I worry about the
+      -implementation of the method and the code in it. Don't want that.
+        -The goal here is to look at our methods a week later and still know how
+          -how to use it w/o studying their implementation
+
+================================================================================
+                    Method names should reflect mutation
+================================================================================
+def update_total(total, cards)
+end
+# total is changed
+
+-Use name conventions in my code so that others and myself do not have to
+  -remember what certain things mean, etc.
+-If the method is going to mutate, then create a method like update_total
+  -if my method will return a value, then use a name that will describe that to
+    -my future self or whoever is reading my code
+-The less I have to remember and the less others have to remember the better!
+-The more we have to think about the method then the harder it'll be to use it.
+-Remember: Do not write a method that will return a value and have side effects.
+-Think of methods like Lego blocks, each one should have its own functionality
+ -and be simple to use. Large programs have hundreds or thousands of small
+   -methods.
+-If your method is convoluted then that is probably because your understanding
+  -of the problem isn't super clear yet. Once you understand the problem better
+    -then you will be able to refactor your code.
+
+================================================================================
+                            Displaying output
+================================================================================
+-Sometimes some methods will only display something:
+def welcome
+  puts "welcome"
+end
+
+-The method welcome above is a bit confusing, because we don't know if it
+  -returns a string or outputs a string when we look at its name
+-In methods that will output info, you must specify when you name them that they
+  -do just that.
+- Instead of just 'welcome', you can put: print_welcome, display_welcome, or
+  -say_welcome
+-Make sure to name methods like this that output only when they output info.
+  -Do not do this if the method has side effects or returns a value.
+Methods are like black-boxes. It takes some stuff (input) and returns some value
+  -(output) to you. They should be very contained and you should know what they
+    -do without having to look up the implementation. Coding will be much easier
+      -if you follow these general guidelines.
+================================================================================
+                            Miscellaneous Tips
+================================================================================
+-Your program should probably only have one exit point (how the program finishes)
+-Name your methods from the perspective of using them later. That is, think
+  -about how you would like to invoke them. Think about the implementation later.
+    -For example, if you have an array of cards, and you want to write a method
+      -to find the ace, your method should be called find_ace, and you can use
+        -it like this: ace = find_ace(cards). You shouldn't name it
+          -find_ace_from_cards, because you'd be invoking it like this:
+            -find_ace_from_cards(cards).
+              -When Rubyists see a method like that, they think "what else can
+                -you find an ace from besides cards? tiles?". The easier your
+                  -code is to read, the easier it is to debug and maintain.

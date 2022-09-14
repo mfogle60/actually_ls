@@ -1,0 +1,71 @@
+# this game wont be dealing w/ double-down/splits or things like that in the game.
+
+# So in this game, there are two people playing against each other:
+  - the player vs the dealer
+
+# Each player starts off w/ 2 cards, player can see their own 2 cards,
+  and can only see one of dealers cards
+
+# The point of the game is to get to as close as 21 as possible w/o going over.
+
+# The game will also revolve around a deck of 52 cards which will have the
+  the following cards:
+  - 2, 3, 4, 5, 6, 7, 8, 9, 10 (all taken at face value)
+  - the queen, jack and king all have a value of 10
+  - the ace can have a value of 1 or 11 depending on when its used
+
+# In their move, the player can either stay or take another card ('hit')
+  - remember tho if they ask for another card and they go over 21
+    then they lose
+  - the players move will be over when they stay or they bust
+  - if the player busts, the game is over and the dealer won
+
+# The player can asks to hit as many times as they want..
+
+# After the players turn, its the dealers turn
+  - the dealer must play according to a strict rule:
+    - Hit until the total is at least 17
+  - if dealer busts, player wins
+
+# How to determine value of ace..(Remember that ace can be 1 or 11)
+  - its value depends on each time a new card is drawn from the deck
+  -
+
+
+********************************************************************************
+# note: ace is either the value of 1 or 11, the value of the card will be
+        11 unless it brings the total value of the players cards over 21
+        in this case the ace is worth 1.
+
+Pseudocode for game
+- Game starts w/:
+    - deck of 52 cards
+    - Player gets 2 cards
+    - Dealer gets 2 cards but only shows one card to player
+- Players turn first
+  *Player will see what cards they get*
+  - player can either hit or stay
+    - couple things can happen if the player hits..they dont bust, or they bust
+  - if player busts, then game over
+- If player is under 21 and stays then it is dealers turn
+- Dealer must follow a strict rule:
+  - It can hit until its cards AT LEAST have a value of 17..
+  - if dealer busts then it loses
+- Game is over when someone busts
+
+# Algo for determining how to initiate the game,
+1. Create deck of 52 cards
+   - check out mini algorithm for deck of cards
+2. Then from the deck of cards give the player two cards, and dealer 2 cards
+   - these cards must be random
+
+
+# Mini algorithm for creating deck of cards
+   - There are 4 suits, so every suit will have 13 cards
+   - Tho the suits don't matter too much, we can still organize the cards like that
+     - 13 clubs
+     - 13 diamonds
+     - 13 hearts
+     - 13 spades
+   - Create a collection for every suit, one for hearts..one for diamonds..
+   - make those collections part of the deck's collection

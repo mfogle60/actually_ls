@@ -1,0 +1,20 @@
+# here is our yaml configuration file for our mortgage calculator
+# we can even organize it in various languages
+
+empty: "You cannot enter a blank as a response.."
+incorrect: "Sorry, that wasn't a valid response.Try again."
+welcome: "Welcome to 'Mortgage Calculator'"
+intro: "We just need a few things from you so we can calculate your monthly
+your monthly payments."
+first_thing: "Please enter the amount of your loan."
+second_thing: "Great! Next, enter your apr rate."
+third_thing: "Finally,let's get your loan duration.(In years please.)"
+summary: "Awesome, below are the amounts you entered."
+loan_amount_sum: "Your loan amount is:"
+apr_rate_sum: "Your apr rate is:"
+loan_duration_sum: "Your loan duration is"
+correct?: "Are they correct? (Y or N)"
+beep_boop: "Calculating your monthly payments.."
+try_again?: "Would you like to use the mortgage calculator again?"
+y_or_n: "Enter yes or no"
+thanks!: "Thanks for using our calculator. Bye-bye!"

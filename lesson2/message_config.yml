@@ -1,0 +1,38 @@
+# We need to translate our prompts to other languages
+# this is a configuration file! for our calculator_bonus_features file
+# Remember that we can make this file-
+# any file type we want. It can be a json file, .txt file, but we will use yaml
+# Ruby has libaries that can parse any of these file types. Rubyists use .yml
+# here we are putting the messages of our program into hashes to be easily
+# accessible. This is a yaml file.
+en: # this is called a top-level key
+  welcome: "Welcome to Calculator! Enter your name:"
+  valid_name: "Make sure to enter a valid name."
+  greeting: "Hi"
+  first_entry: "Please enter your first number."
+  invalid_entry: "Sorry,that doesn't appear to be a valid entry."
+  second_entry: "Now enter a second value."
+  invalid_operation: "Sorry, that isn't a valid operation. Try again."
+  result: "Your result is:"
+  again?: "Would you like to use the calculator again?(Type Y to continue using
+  the program.)"
+  goodbye: "Thanks for playing!"
+  add:  "adding.."
+  subtract: "subtracting.."
+  multiply: "multiplying.."
+  divide: "dividing.."
+es:
+  welcome: "Bienvenidos a Calculadora! Entre su nombre:"
+  valid_name: "Asegurate que entres un nombre valido."
+  greeting: "Hola"
+  first_entry: "Por favor entre su primer numero"
+  invalid_entry: "Perdon, ese no es un caracter valido."
+  second_entry: "Entre tu segundo caracter."
+  invalid_operation: "Esa no es una operacion valida.Intenta otra vez."
+  result: "El resultado es:"
+  again?: "Quieres usar la calculadora otra vez? Entre 'Y' si quieres continuar."
+  goodbye: "Gracias por jugar!"
+  add:  "sumando.."
+  subtract: "restando.."
+  multiply: "multiplicando.."
+  divide: "dividiendo.."

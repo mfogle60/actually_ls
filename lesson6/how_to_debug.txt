@@ -1,0 +1,73 @@
+# What are bugs?
+- Bugs are human errors in code
+
+# What is debugging?
+- Debugging is removing those errors from the code
+
+# The 3 Steps for debugging..
+
+1. Identify the problem, find where the problem is in your code
+  - Whether it is in your stack trace, or error message
+2. Understand the problem
+  - Once we identified the line of code, or the piece of code that was giving
+    us problems then we can focus on trying to understand the problem better.
+      - This may mean trying to understand the problem in its surrounding context
+3. Implement a solution
+  - This is where you change the code in order to eliminate the bug that
+    was causing the issue.
+  - If you did the first two steps correctly then this step should be relatively
+    easy.
+
+# Types of errors
+- The way that we approach our previous debugging steps will depend on the type
+  of error we get.
+- 1. Syntax errors
+  - These are caused because of incorrect spelling, not writing keyword appropriately
+  - These errors generally stop your code from running
+- 2. Logical errors
+  - Errors in the logic of our code
+  - Code generally runs but produces unexpected results
+  - These errors are the ones where you actually have to use your patience and
+    put effort into finding the bug
+
+# What is pry?
+- Pry is a RubyGem
+  - This means that in order to use it you need to download it.
+- Pry is also a REPL
+  - REPL stands for:
+    - 'Read', 'Evaluate', 'Print', 'Loop'
+  - This basically means that pry does this:
+    - Takes user input
+    - Evaluates the input
+    - Returns the results to the user
+    - Loops back to the start
+
+# Using Pry
+- Pry is very similar to irb, you can open it in your terminal and it will
+  have the same function as irb, but it is much more powerful for for the
+  following reason: we can change scope.
+  - We do this with the cd command, which allows us to go in and out of objects
+  - Here is an example..
+
+  **Imagine we are in pry**
+  pry(main)
+  arr = [1, 2, 3]
+
+  cd arr
+
+  **Now we are in arr object**
+
+  pry(#<Array>)
+
+  # IMPORTANT: We can even check the methods available for us to use on array with the
+    command ls
+
+  # Also we can see more about a method with the show-doc(enter method) command.
+    - For example we can do: show-doc map
+      - show-doc will show us everything there is to know about map, including examples
+
+  # Invoking pry at run time
+
+  # Debugging w/ pry
+  - Pry is great for bugs in loops/iterating logic.. since it allows us to
+    interrupt the program on each iteration 
