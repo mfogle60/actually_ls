@@ -1,0 +1,18 @@
+   _____                           _   _____        __
+  / ____|                         | | |_   _|      / _|
+ | |  __  ___ _ __   ___ _ __ __ _| |   | |  _ __ | |_ ___
+ | | |_ |/ _ \ '_ \ / _ \ '__/ _` | |   | | | '_ \|  _/ _ \
+ | |__| |  __/ | | |  __/ | | (_| | |  _| |_| | | | || (_) |
+  \_____|\___|_| |_|\___|_|  \__,_|_| |_____|_| |_|_| \___/
+--------------------------------------------------------------
+
+
+
+
+▶️ Twenty-One is a card game that involves two players, the dealer
+
+  and a player (you). The game starts with a standard deck of cards (52 cards in total
+
+  4 suits and 13 cards in each suit, the suits are 'Diamonds', 'Clubs', 'Spades' and 'Hearts').
+
+  The purpose of the game is to get as close to (or ideally exactly) 21 as possible.
