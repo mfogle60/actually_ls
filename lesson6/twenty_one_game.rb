@@ -1,5 +1,5 @@
 require 'yaml'
-require "pry"
+require 'pry'
 
 MESSAGES_TO_DISPLAY = YAML.load_file("twenty_one.yml")
 
@@ -27,14 +27,6 @@ def deck_of_cards
     spades: %w(Ace 2 3 4 5 6 7 8 9 10 Jack Queen King) }
 end
 
-def empty_arr
-  []
-end
-
-def empty_string
-  ''
-end
-
 def prompt(message)
   puts "=> #{message}"
 end
@@ -53,7 +45,7 @@ def hit_enter
   e
 end
 
-def flow
+def introduction_flow
   counter = 0
   loop do
     puts File.readlines(FILES[counter])
@@ -67,8 +59,13 @@ def flow
 end
 
 def sleep_and_clear_game
-  sleep 3
+  sleep 2
   system('clear')
+end
+
+def initialize_hand!(hand, deck)
+  initial_two_cards!(hand, deck)
+  delete_initial_cards_from_hand!(hand, deck)
 end
 
 def delete_initial_cards_from_hand!(hand, deck)
@@ -193,7 +190,7 @@ def string_values_to_integers(values)
   end
 end
 
-def sum_of_hand(hand, values) # i need to do it here.. ma
+def sum_of_hand(hand, values)
   arr_of_values_but_no_suits!(hand, values)
   string_values_to_integers(values)
   values.inject(:+)
@@ -212,62 +209,75 @@ end
 def h_or_s
   input = gets.chomp.downcase
   loop do
-    break if input == 's' || input == 'h'
+    break if input == 'stay' || input == 'hit'
     prompt(display_message(MESSAGES_TO_DISPLAY, 'h_or_s'))
     input = gets.chomp.downcase
   end
-  input
+  input.to_sym
 end
 
-def player_made_choice(choice)
-  case choice
-  when 'h'
-    'hit'
-  else
-    'stay'
-  end
-end
-
-def two_paths(choice, hand, values, deck)
-  if choice == 'hit'
-    hits!(hand, deck)
-    determine_last_card_value!(hand, values)
-  else
-    prompt(display_message(MESSAGES_TO_DISPLAY, 'player_stays'))
-  end
-end
-
-def hits!(hand, deck)
+def effects_of_hit!(hand, deck, values)
   add_card_to_hand!(hand, deck)
+  delete_drawn_card_from_deck!(hand, deck)
+  determine_last_card_value!(hand, values)
+end
+
+def message_after_hitting
+  prompt(display_message(MESSAGES_TO_DISPLAY, 'player_hits'))
+end
+
+def message_after_staying
+  prompt("Player stays")
 end
 
 def bust?(total)
   total > 21
 end
 
-def says_dealer_busted
-  prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_busts'))
+def dealer_decides_move(sum)
+  sum < 17 ? :hit : :stay
 end
 
-def dealer_decides_move(sum)
-  sum <= 17 ? 'h' : 's'
+def says_dealer_hits_or_stays(decision)
+  case decision
+  when :hit
+    prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_hits'))
+  else
+    prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_stays'))
+  end
 end
 
 def play_again
   y_or_n = ''
-  prompt("Enter \'y\' or \'n\'.")
+  puts("Enter \'yes\' or \'no\'.")
   loop do
     y_or_n = gets.chomp.downcase
-    return y_or_n if y_or_n == 'n' || y_or_n == 'y'
+    return y_or_n.to_sym if y_or_n == 'no' || y_or_n == 'yes'
     prompt(display_message(MESSAGES_TO_DISPLAY, 'n_or_y'))
   end
 end
 
-def did_player_and_dealer_stay?(p_move, d_move)
-  p_move == 's' && d_move == 's'
+def says_continue_game_or_not(decision)
+  case decision
+  when :yes
+    prompt(display_message(MESSAGES_TO_DISPLAY, 'continue_game'))
+  else
+    prompt(display_message(MESSAGES_TO_DISPLAY, 'goodbye'))
+  end
 end
 
-def compare_hands(player, dealer)
+def did_player_and_dealer_stay?(p_move, d_move)
+  p_move == :stay && d_move == :stay
+end
+
+def says_all_of_dealers_hand(hand)
+  prompt("Player's entire hand: ")
+  hand.each do |subarr|
+    puts "#{subarr[1]} of #{subarr[0]}"
+  end
+end
+
+def compare_hands(player, dealer, hand)
   if player > dealer
     prompt(display_message(MESSAGES_TO_DISPLAY, 'players_hand_wins'))
   elsif player == dealer
@@ -275,6 +285,8 @@ def compare_hands(player, dealer)
   else
     prompt(display_message(MESSAGES_TO_DISPLAY, 'dealers_hand_wins'))
   end
+  prints_blank_lines
+  says_all_of_dealers_hand(hand)
 end
 
 def clears_everything!(*args)
@@ -283,123 +295,105 @@ end
 
 deck = deck_of_cards
 
-players_hand = empty_arr
-dealers_hand = empty_arr
-p_card_values = empty_arr
-d_card_values = empty_arr
+players_hand = []
+dealers_hand = []
+p_card_values = []
+d_card_values = []
 
-y_or_n = empty_string
-dealer_decision = empty_string
-player_decision = empty_string
-dealer_absolute_total = empty_string
-player_absolute_total = empty_string
+player_decision = ''
+dealer_decision = ''
+player_total = ''
+dealer_total = ''
 
-flow
+introduction_flow
 
 loop do
-  initial_two_cards!(players_hand, deck)
-  delete_initial_cards_from_hand!(players_hand, deck)
+  initialize_hand!(players_hand, deck)
   say_player_hand(players_hand)
-  player_absolute_total = sum_of_hand(players_hand, p_card_values)
-  2.times { puts '' }
-  prompt("Your current hand's total is: #{player_absolute_total}")
-
-  initial_two_cards!(dealers_hand, deck)
-  delete_initial_cards_from_hand!(dealers_hand, deck)
+  player_total = sum_of_hand(players_hand, p_card_values)
   prints_blank_lines
+  initialize_hand!(dealers_hand, deck)
   say_dealer_hand(dealers_hand)
-  dealer_absolute_total = sum_of_hand(dealers_hand, d_card_values)
-
+  dealer_total = sum_of_hand(dealers_hand, d_card_values)
   prints_blank_lines
   prompt("Press #{flashes_message('enter')} to continue.")
   sleep_and_clear_game if hit_enter
 
   loop do
-    says_both_hands(players_hand, dealers_hand)
     prompt(display_message(MESSAGES_TO_DISPLAY, 'h_or_s'))
+    puts("(Your hand's total is: #{flashes_message(player_total)}.)")
+    puts " "
     player_decision = h_or_s
     sleep_and_clear_game
 
-    if player_decision == 'h'
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'player_hits'))
+    case player_decision
+    when :hit
+      message_after_hitting
       sleep_and_clear_game
-      hits!(players_hand, deck)
-      delete_drawn_card_from_deck!(players_hand, deck)
-      say_player_hand(players_hand)
-      determine_last_card_value!(players_hand, p_card_values)
-      player_absolute_total = p_card_values.inject(:+)
+      effects_of_hit!(players_hand, deck, p_card_values)
+      player_total = p_card_values.inject(:+)
+      says_both_hands(players_hand, dealers_hand)
     else
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'player_stays'))
-      sleep_and_clear_game
-      break
+      message_after_staying(player_total)
     end
     prints_blank_lines
-    prompt("Your current hand's total is: #{player_absolute_total}")
-    break if bust?(player_absolute_total)
-    sleep_and_clear_game
+    break if player_decision == :stay || bust?(player_total)
   end
 
-  if bust?(player_absolute_total)
+  sleep_and_clear_game
+
+  if bust?(player_total)
     prompt(display_message(MESSAGES_TO_DISPLAY, 'player_busts'))
+    puts("(You lost because your total was: #{player_total})")
     y_or_n = play_again
-    if y_or_n == 'y'
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'continue_game'))
+    sleep_and_clear_game
+    if y_or_n == :yes
       clears_everything!(players_hand, dealers_hand,
                          p_card_values, d_card_values)
-
       deck = deck_of_cards
-      sleep_and_clear_game
       next
-    else
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'goodbye'))
-      break
     end
+    break
   end
 
   prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_turn'))
   sleep_and_clear_game
 
   loop do
-    dealer_decision = dealer_decides_move(dealer_absolute_total)
-    if dealer_decision == 'h'
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_hits'))
-      sleep_and_clear_game
-      hits!(dealers_hand, deck)
-      delete_drawn_card_from_deck!(dealers_hand, deck)
-      determine_last_card_value!(dealers_hand, d_card_values)
-      dealer_absolute_total = d_card_values.inject(:+)
-      sleep_and_clear_game
-    else
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_stays'))
-      break
+    dealer_total = d_card_values.inject(:+)
+    dealer_decision = dealer_decides_move(dealer_total)
+    says_dealer_hits_or_stays(dealer_decision)
+    sleep_and_clear_game
+    if dealer_decision == :hit
+      effects_of_hit!(dealers_hand, deck, d_card_values)
     end
-    break if bust?(dealer_absolute_total)
+    dealer_total = d_card_values.inject(:+)
+    break if dealer_decision == :stay || bust?(dealer_total)
   end
 
   sleep_and_clear_game
 
-  says_dealer_busted if bust?(dealer_absolute_total)
-
-  if did_player_and_dealer_stay?(player_decision, dealer_decision)
+  if bust?(dealer_total)
+    prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_busts'))
+  elsif did_player_and_dealer_stay?(player_decision, dealer_decision)
     prompt(display_message(MESSAGES_TO_DISPLAY, 'both_stay'))
-    compare_hands(player_absolute_total, dealer_absolute_total)
+    compare_hands(player_total, dealer_total, dealers_hand)
   end
 
-  sleep_and_clear_game
+  prints_blank_lines
 
   loop do
     prompt(display_message(MESSAGES_TO_DISPLAY, 'play_again'))
     y_or_n = play_again
-    if y_or_n == 'y'
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'continue_game'))
-      clears_everything!(players_hand, dealers_hand,
+    sleep_and_clear_game
+    says_continue_game_or_not(y_or_n)
+    if y_or_n == :yes
+      clears_everything!(dealers_hand, players_hand,
                          p_card_values, d_card_values)
       deck = deck_of_cards
-      sleep_and_clear_game
-    else
-      prompt(display_message(MESSAGES_TO_DISPLAY, 'goodbye'))
     end
     break
   end
-  break if y_or_n == 'n'
+
+  break if y_or_n == :no
 end
