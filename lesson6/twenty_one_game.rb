@@ -1,5 +1,4 @@
 require 'yaml'
-require 'pry'
 
 MESSAGES_TO_DISPLAY = YAML.load_file("twenty_one.yml")
 
