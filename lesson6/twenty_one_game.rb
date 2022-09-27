@@ -62,11 +62,6 @@ def sleep_and_clear_game
   system('clear')
 end
 
-def initialize_hand!(hand, deck)
-  initial_two_cards!(hand, deck)
-  delete_initial_cards_from_hand!(hand, deck)
-end
-
 def delete_initial_cards_from_hand!(hand, deck)
   hand.each do |subarr|
     subarr.each_index do |_|
@@ -87,15 +82,27 @@ def add_card_to_hand!(hand, deck)
   hand << [suit, card]
 end
 
-def generate_random_hand(deck_copy)
-  suit = SUITS.sample
-  suits_value = deck_copy[suit].sample
-  [suit, suits_value]
+def generate_random_hand!(deck_copy)
+  cards = []
+  2.times do
+    suit = deck_copy.keys.shuffle.sample
+    values = deck_copy[suit].shuffle.sample
+    cards << [suit, values]
+  end
+  cards
 end
 
-def initial_two_cards!(hand, deck)
-  while hand.size < 2
-    hand << generate_random_hand(deck)
+def verifies_and_deals_unique_cards!(deck)
+  hand = generate_random_hand!(deck)
+  hand.uniq!
+  loop do
+    if hand.size == 2
+      return hand
+    else
+      hand.clear
+      hand = generate_random_hand!(deck)
+      hand.uniq!
+    end
   end
 end
 
@@ -226,7 +233,7 @@ def message_after_hitting
 end
 
 def message_after_staying
-  prompt("Player stays")
+  prompt(display_message(MESSAGES_TO_DISPLAY, 'player_stays'))
 end
 
 def bust?(total)
@@ -270,7 +277,7 @@ def did_player_and_dealer_stay?(p_move, d_move)
 end
 
 def says_all_of_dealers_hand(hand)
-  prompt("Player's entire hand: ")
+  prompt("Dealer's entire hand: ")
   hand.each do |subarr|
     puts "#{subarr[1]} of #{subarr[0]}"
   end
@@ -294,11 +301,11 @@ end
 
 deck = deck_of_cards
 
-players_hand = []
-dealers_hand = []
 p_card_values = []
 d_card_values = []
 
+players_hand = ''
+dealers_hand = ''
 player_decision = ''
 dealer_decision = ''
 player_total = ''
@@ -307,11 +314,13 @@ dealer_total = ''
 introduction_flow
 
 loop do
-  initialize_hand!(players_hand, deck)
+  players_hand = verifies_and_deals_unique_cards!(deck)
+  delete_initial_cards_from_hand!(players_hand, deck)
   say_player_hand(players_hand)
   player_total = sum_of_hand(players_hand, p_card_values)
   prints_blank_lines
-  initialize_hand!(dealers_hand, deck)
+  dealers_hand = verifies_and_deals_unique_cards!(deck)
+  delete_initial_cards_from_hand!(dealers_hand, deck)
   say_dealer_hand(dealers_hand)
   dealer_total = sum_of_hand(dealers_hand, d_card_values)
   prints_blank_lines
@@ -319,6 +328,8 @@ loop do
   sleep_and_clear_game if hit_enter
 
   loop do
+    says_both_hands(players_hand, dealers_hand)
+    prints_blank_lines
     prompt(display_message(MESSAGES_TO_DISPLAY, 'h_or_s'))
     puts("(Your hand's total is: #{flashes_message(player_total)}.)")
     puts " "
@@ -331,11 +342,10 @@ loop do
       sleep_and_clear_game
       effects_of_hit!(players_hand, deck, p_card_values)
       player_total = p_card_values.inject(:+)
-      says_both_hands(players_hand, dealers_hand)
+      sleep_and_clear_game
     else
-      message_after_staying(player_total)
+      message_after_staying
     end
-    prints_blank_lines
     break if player_decision == :stay || bust?(player_total)
   end
 
@@ -374,6 +384,8 @@ loop do
 
   if bust?(dealer_total)
     prompt(display_message(MESSAGES_TO_DISPLAY, 'dealer_busts'))
+    prints_blank_lines
+    says_all_of_dealers_hand(dealers_hand)
   elsif did_player_and_dealer_stay?(player_decision, dealer_decision)
     prompt(display_message(MESSAGES_TO_DISPLAY, 'both_stay'))
     compare_hands(player_total, dealer_total, dealers_hand)
